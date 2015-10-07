@@ -10,7 +10,7 @@ import nagiosplugin
 import redis
 
 
-class check_redis(nagiosplugin.Resource):
+class CheckRedis(nagiosplugin.Resource):
 
     def __init__(self, host, port=6379, password=None, warn=None, crit=None, timeout=300, check_type=None):
         self.host = host
@@ -20,9 +20,9 @@ class check_redis(nagiosplugin.Resource):
         self.crit = crit
         self.timeout = timeout
         self.check_type = check_type
-        self._fetchInfo()
+        self._check_info()
 
-    def _fetchInfo(self):
+    def _check_info(self):
         try:
             self.info = redis.Redis(host=self.host, port=self.port,
                                     password=self.password).info()
@@ -36,7 +36,7 @@ class check_redis(nagiosplugin.Resource):
         return self.info['connected_slaves']
 
     def get_used_mem(self):
-        return "%.0f" % float(self.info['used_memory'] / 1024.0 / 1024.0)
+        return "%.0f" % (self.info['used_memory'] / 1024.0 / 1024.0)
 
     def probe(self):
         if self.check_type == 'mem':
@@ -65,7 +65,7 @@ def main():
     parser.add_argument('-v', '--version', help='Print version', action='version', version='%(prog)s 1.0')
     args = parser.parse_args()
 
-    check = nagiosplugin.Check(check_redis(host='localhost',
+    check = nagiosplugin.Check(CheckRedis(host='localhost',
                                            check_type=args.check_type,
                                            warn=args.warn,
                                            crit=args.crit),
