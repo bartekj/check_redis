@@ -65,7 +65,7 @@ def main():
     parser.add_argument('-v', '--version', help='Print version', action='version', version='%(prog)s 1.0')
     args = parser.parse_args()
 
-    check = nagiosplugin.Check(CheckRedis(host='localhost',
+    check = nagiosplugin.Check(CheckRedis(host=args.server,
                                            check_type=args.check_type,
                                            warn=args.warn,
                                            crit=args.crit),
